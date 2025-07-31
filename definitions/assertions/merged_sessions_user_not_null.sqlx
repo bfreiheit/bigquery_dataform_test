@@ -1,0 +1,7 @@
+config {
+  type: "assertion"
+}
+
+select *
+from ${ref("merged_sessions")}
+where user_id is null
