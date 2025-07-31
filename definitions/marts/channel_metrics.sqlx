@@ -1,0 +1,32 @@
+config {
+    type: "table",
+    schema: "analytics_marts",
+    description: "Channel info",
+    columns: {
+        days_to_contract_start: "Days between lat session date and contract start date",
+        users: "Unique user count",
+        conversions: "Converted sessions"
+    },
+    tags: ["marts"]
+}
+
+SELECT
+  session_date,
+  sl.channel_type,
+  channel,
+  SUM(costs) total_spent,
+  SUM(sessions_benchmarks) sessions_benchmarks,
+  SUM(costs_benchmarks) costs_benchmarks
+FROM
+  ${ref("merged_sessions")} AS sl
+LEFT JOIN
+  ${ref("ads_benchmarks")} AS ab
+ON
+  sl.channel_type = ab.channel_type
+  AND sl.session_date = ab.date
+WHERE
+  sl.channel_type = 'paid'
+GROUP BY
+  session_date,
+  channel_type,
+  channel

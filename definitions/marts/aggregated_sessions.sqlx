@@ -1,29 +1,29 @@
 config {
-  type: "table",
-  schema: "analytics_marts",
-  description: "Aggregated sessions",
-  columns: {
-    days_to_contract_start: "Days between lat session date and contract start date",
-    users: "Unique user count",
-    conversions: "Converted sessions"
-  },
-  tags: ["integration"]
+    type: "table",
+    schema: "analytics_marts",
+    description: "Aggregated sessions",
+    columns: {
+        days_to_contract_start: "Days between lat session date and contract start date",
+        users: "Unique user count",
+        conversions: "Converted sessions"
+    },
+    tags: ["marts"]
 }
 
-
- with journey_lengths as (
-  select
+WITH
+  journey_lengths AS (
+  SELECT
     user_id,
-    count(distinct session_id) as touchpoints
-  from ${ref('merged_sessions')}
-  group by user_id
-) 
+    COUNT(DISTINCT session_id) AS touchpoints
+  FROM
+    ${ref('merged_sessions')}
+  GROUP BY
+    user_id )
 SELECT
-  session_date,  
+  session_date,
   sl.channel_type,
-  channel,
   bike_type,
-  bike_brand,  
+  bike_brand,
   COUNT(session_id) sessions,
   COUNT(DISTINCT user_id) users,
   COUNTIF(DISTINCT account_id IS NOT NULL) conversions,
@@ -33,26 +33,18 @@ SELECT
 END
   days_to_contract_start,
   SUM(saleprice_gross) total_revenue,
-  SUM(costs) total_spent,
-  sessions_benchmarks,
-  costs_benchmarks,
   jl.touchpoints
 FROM
   ${ref("merged_sessions")} AS sl
-LEFT JOIN
- ${ref("ads_benchmarks")} AS ab
-ON
-  sl.channel_type = ab.channel_type
-  AND sl.session_date = ab.date
-join journey_lengths jl using(user_id)
+JOIN
+  journey_lengths jl
+USING
+  (user_id)
 GROUP BY
   session_date,
   contract_start_date,
   channel_type,
-  channel,
   account_id,
   bike_type,
   bike_brand,
-  sessions_benchmarks,
-  costs_benchmarks,
   touchpoints
