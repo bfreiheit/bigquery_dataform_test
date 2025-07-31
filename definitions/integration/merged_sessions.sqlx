@@ -1,0 +1,40 @@
+config {
+  type: "table",
+  schema: "analytics_integration",
+  description: "Joined user session data",
+  columns: {
+    user_id: "Unique user identifier",
+    session_id: "session id of user",
+    session_date: "Date of sessions"
+  },
+  tags: ["integration"]
+}
+
+SELECT
+  user_id,
+  session_id,
+  session_date,
+  costs,
+  device,
+  channel,
+  channel_name AS channel_type,
+  account_id,
+  request_date,
+  contract_start_date,
+  contract_end_date,
+  state,
+  status,
+  bike_type,
+  bike_brand,
+  saleprice_gross,
+  insurance_type
+FROM
+  ${ref("sessions")} s
+JOIN
+ ${ref("channel_mapping")} m
+ON
+  s.channel_code = m.channel_code
+LEFT JOIN
+  ${ref("leases")} l
+ON
+  l.leasing_contract_id = s.leasing_contract_id
