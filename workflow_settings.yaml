@@ -1,0 +1,5 @@
+defaultProject: igneous-shell-465910-i3
+defaultLocation: EU
+defaultDataset: dataform
+defaultAssertionDataset: dataform_assertions
+dataformCoreVersion: 3.0.0
