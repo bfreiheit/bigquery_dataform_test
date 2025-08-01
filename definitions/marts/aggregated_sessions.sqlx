@@ -7,6 +7,9 @@ config {
         users: "Unique user count",
         conversions: "Converted sessions"
     },
+    assertions: {
+      nonNull: ["session_date"]
+    },   
     tags: ["marts"]
 }
 

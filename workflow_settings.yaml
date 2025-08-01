@@ -1,5 +1,5 @@
 defaultProject: igneous-shell-465910-i3
 defaultLocation: europe-west3
-defaultDataset: analytics_stage # default
+defaultDataset: analytics_stage_dev
 defaultAssertionDataset: dataform_assertions
 dataformCoreVersion: 3.0.0
